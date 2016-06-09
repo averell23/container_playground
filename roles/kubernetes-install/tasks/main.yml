@@ -1,0 +1,23 @@
+---
+- name: Install yum repo
+  yum_repository:
+    name: virt7-docker-common-release
+    description: Kubernetes Repo
+    baseurl: http://cbs.centos.org/repos/virt7-docker-common-release/x86_64/os/
+    gpgcheck: no
+
+- name: Install kubernetes
+  yum: name="kubernetes" state="latest"
+
+- name: Disable host firewall
+  service: name=firewalld enabled=no state=stopped
+
+- name: Setup hosts line for overlord
+  lineinfile: dest=/etc/hosts line="{{kubernetes_overlord}} kubernetes-overlord"
+
+- name: Setup hosts lines for minions
+  lineinfile: dest=/etc/hosts line="{{item}} kubernetes-minion{{item.0}}"
+  with_items: "{{kubernetes_minions}}"
+
+- name: Install kubernetes config
+  template: src=config.j2 dest=/etc/kubernetes/config

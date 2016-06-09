@@ -1,0 +1,8 @@
+---
+- name: restart overlord
+  service: name={{item}} enabled=yes state=restarted
+  with_items:
+    - etcd
+    - kube-apiserver
+    - kube-controller-manager
+    - kube-scheduler

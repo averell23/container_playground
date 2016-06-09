@@ -1,0 +1,12 @@
+---
+- name: Install packages
+  yum: name=etcd state=latest
+  notify: restart overlord
+
+- name: Install etcd config
+  template: src=etcd.conf.j2 dest=/etc/etcd/etcd.conf
+  notify: restart overlord
+
+- name: Install apiserver config
+  template: src=apiserver.j2 dest=/etc/kubernetes/apiserver
+  notify: restart overlord

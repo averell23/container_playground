@@ -1,0 +1,10 @@
+---
+- hostname: name=local-minion
+
+- name: Install kubelet config
+  template: src=kubelet.j2 dest=/etc/kubernetes/kubelet
+  notify: restart minion
+
+- name: Install proxy config
+  template: src=proxy.j2 dest=/etc/kubernetes/proxy
+  notify: restart minion

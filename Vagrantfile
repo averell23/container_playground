@@ -9,13 +9,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
   end
 
-  # mysql server 1
-  config.vm.define "vagrant33" do |box|
-    box.vm.box = "bento/centos-6.7"
-    box.vm.network :private_network, ip: '192.168.42.33'
-    box.vm.network :private_network, ip: "192.168.42.70"
+  config.vm.define "overlord" do |box|
+    box.vm.box = "bento/centos-7.2"
+    box.vm.network :private_network, ip: '192.168.23.10'
     box.vm.provider :virtualbox do |vb|
-      vb.customize ["modifyvm", :id, "--memory", "4096"]
+      vb.customize ["modifyvm", :id, "--memory", "2048"]
+      vb.customize ["modifyvm", :id, "--cpus", "2"]
+    end
+  end
+
+  config.vm.define "minion1" do |box|
+    box.vm.box = "bento/centos-7.2"
+    box.vm.network :private_network, ip: '192.168.23.11'
+    box.vm.provider :virtualbox do |vb|
+      vb.customize ["modifyvm", :id, "--memory", "2048"]
       vb.customize ["modifyvm", :id, "--cpus", "2"]
     end
   end

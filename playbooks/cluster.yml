@@ -1,0 +1,15 @@
+---
+- hosts: all
+  become: yes
+  roles:
+    - kubernetes-install
+
+- hosts: overlord
+  become: yes
+  roles:
+    - kubernetes-overlord
+
+- hosts: minion
+  become: yes
+  roles:
+    - kubernetes-minion
