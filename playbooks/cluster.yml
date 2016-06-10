@@ -3,6 +3,7 @@
   become: yes
   roles:
     - kubernetes-install
+    - flocker-node
 
 - hosts: overlord
   become: yes
