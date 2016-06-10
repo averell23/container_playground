@@ -11,6 +11,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "overlord" do |box|
     box.vm.box = "bento/centos-7.2"
+    box.vm.hostname = "overlord"
     box.vm.network :private_network, ip: '192.168.23.10'
     box.vm.provider :virtualbox do |vb|
       vb.customize ["modifyvm", :id, "--memory", "2048"]
@@ -20,6 +21,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "minion1" do |box|
     box.vm.box = "bento/centos-7.2"
+    box.vm.hostname = "minion1"
     box.vm.network :private_network, ip: '192.168.23.11'
     box.vm.provider :virtualbox do |vb|
       vb.customize ["modifyvm", :id, "--memory", "2048"]

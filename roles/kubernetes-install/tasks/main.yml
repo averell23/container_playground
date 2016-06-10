@@ -16,7 +16,7 @@
   lineinfile: dest=/etc/hosts line="{{kubernetes_overlord}} kubernetes-overlord"
 
 - name: Setup hosts lines for minions
-  lineinfile: dest=/etc/hosts line="{{item}} kubernetes-minion{{item.0}}"
+  lineinfile: dest=/etc/hosts line="{{item.ip}} {{item.name}}"
   with_items: "{{kubernetes_minions}}"
 
 - name: Install kubernetes config
