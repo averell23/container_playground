@@ -1,27 +1,20 @@
 ---
-- hosts: all
+- hosts: kubernetes
   become: yes
   roles:
     - kubernetes-install
-    - flocker-node
 
 - hosts: overlord
   become: yes
   roles:
     - kubernetes-overlord
-    - flocker-certs
 
 - hosts: minion
   become: yes
   roles:
     - kubernetes-minion
 
-- hosts: all
+- hosts: gluster
   become: yes
   roles:
-    - flocker-copy-certs
-
-- hosts: overlord
-  become: yes
-  roles:
-    - flocker-control-service
+    - gluster-server

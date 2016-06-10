@@ -15,6 +15,9 @@
 - name: Setup hosts line for overlord
   lineinfile: dest=/etc/hosts line="{{kubernetes_overlord.ip}} {{kubernetes_overlord.name}}"
 
+- name: Setup hosts line for gluster
+  lineinfile: dest=/etc/hosts line="192.168.23.12 gluster"
+
 - name: Setup hosts lines for minions
   lineinfile: dest=/etc/hosts line="{{item.ip}} {{item.name}}"
   with_items: "{{kubernetes_minions}}"

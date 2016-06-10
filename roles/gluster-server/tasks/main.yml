@@ -1,0 +1,39 @@
+---
+- name: Enable epel-release
+  yum: name=epel-release state=installed
+
+- name: Install gluster repo
+  yum_repository:
+      name: glusterfs-epel
+      description: GlusterFS is a clustered file-system capable of scaling to several petabytes.
+      baseurl: http://download.gluster.org/pub/gluster/glusterfs/3.7/LATEST/EPEL.repo/epel-$releasever/$basearch/
+      skip_if_unavailable: yes
+      gpgcheck: yes
+      gpgkey: http://download.gluster.org/pub/gluster/glusterfs/3.7/LATEST/rsa.pub
+
+- name: Install gluster noarch repo
+  yum_repository:
+    name: glusterfs-noarch-epel
+    description: GlusterFS is a clustered file-system capable of scaling to several petabytes.
+    baseurl: http://download.gluster.org/pub/gluster/glusterfs/3.7/LATEST/EPEL.repo/epel-$releasever/noarch
+    skip_if_unavailable: yes
+    gpgcheck: yes
+    gpgkey: http://download.gluster.org/pub/gluster/glusterfs/3.7/LATEST/rsa.pub
+
+- name: Setup hosts line for gluster
+  lineinfile: dest=/etc/hosts line="192.168.23.12 gluster"
+
+- name: Install gluster server
+  yum: name=glusterfs-server state=latest
+
+- name: Start gluster server
+  service: name=glusterd enabled=yes state=started
+
+- name: Make gluster data volume dir
+  file: path=/data/brick1/gv0 state=directory recurse=yes
+
+- name: Setup gluster volume
+  gluster_volume: state=present name=gv0 brick=/data/brick1/gv0 cluster="gluster"
+
+- name: Start gluster volume
+  gluster_volume: state=started name=gv0
