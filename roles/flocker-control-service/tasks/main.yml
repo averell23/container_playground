@@ -1,0 +1,3 @@
+---
+- name: Enable control service
+  service: name=flocker-control enabled=yes state=started

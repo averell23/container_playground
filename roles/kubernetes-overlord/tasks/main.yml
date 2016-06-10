@@ -10,3 +10,11 @@
 - name: Install apiserver config
   template: src=apiserver.j2 dest=/etc/kubernetes/apiserver
   notify: restart overlord
+
+-  name: Enable services
+   service: name={{item}} enabled=yes state=started
+   with_items:
+     - etcd
+     - kube-apiserver
+     - kube-controller-manager
+     - kube-scheduler

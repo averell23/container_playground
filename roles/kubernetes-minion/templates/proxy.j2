@@ -4,4 +4,4 @@
 # default config should be adequate
 
 # Add your own!
-KUBE_PROXY_ARGS="--master={{kubernetes_overlord}}:8080 --proxy-mode=userspace"
+KUBE_PROXY_ARGS="--master={{kubernetes_overlord.name}}:8080 --proxy-mode=userspace"

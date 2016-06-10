@@ -1,6 +1,8 @@
-kubernetes_overlord:
+flocker_controller:
   name: overlord
   ip: 192.168.23.10
-kubernetes_minions:
+flocker_nodes:
   - name: minion1
     ip: 192.168.23.11
+  - name: overlord
+    ip: 192.168.23.10

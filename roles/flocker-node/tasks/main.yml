@@ -1,7 +1,4 @@
 ---
-- name: Wait for API service to come up
-  wait_for: host={{kubernetes_overlord}} port=8080
-
 - name: Install Flocker base repo
   yum_repository:
     name=clusterhq

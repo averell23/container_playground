@@ -5,7 +5,7 @@ KUBE_API_ADDRESS="--address=0.0.0.0"
 KUBE_API_PORT="--port=8080"
 
 # How the replication controller and scheduler find the kube-apiserver
-KUBE_MASTER="--master=http://{{kubernetes_overlord}}:8080"
+KUBE_MASTER="--master=http://{{kubernetes_overlord.name}}:8080"
 
 # Port kubelets listen on
 KUBELET_PORT="--kubelet-port=10250"

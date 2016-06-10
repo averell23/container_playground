@@ -5,10 +5,10 @@ KUBELET_ADDRESS="--address=0.0.0.0"
 KUBELET_PORT="--port=10250"
 
 # You may leave this blank to use the actual hostname
-KUBELET_HOSTNAME="--hostname-override={{ansible_all_ipv4_addresses[1]}}"
+# KUBELET_HOSTNAME="--hostname-override=somehost"
 
 # Location of the api-server
-KUBELET_API_SERVER="--api-servers=http://{{kubernetes_overlord}}:8080"
+KUBELET_API_SERVER="--api-servers=http://{{kubernetes_overlord.ip}}:8080"
 
 # Add your own!
 KUBELET_ARGS=""

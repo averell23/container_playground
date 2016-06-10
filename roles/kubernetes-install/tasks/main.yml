@@ -13,7 +13,7 @@
   service: name=firewalld enabled=no state=stopped
 
 - name: Setup hosts line for overlord
-  lineinfile: dest=/etc/hosts line="{{kubernetes_overlord}} kubernetes-overlord"
+  lineinfile: dest=/etc/hosts line="{{kubernetes_overlord.ip}} {{kubernetes_overlord.name}}"
 
 - name: Setup hosts lines for minions
   lineinfile: dest=/etc/hosts line="{{item.ip}} {{item.name}}"

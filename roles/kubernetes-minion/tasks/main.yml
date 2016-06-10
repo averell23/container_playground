@@ -1,5 +1,6 @@
 ---
-- hostname: name=local-minion
+- name: Wait for API service to come up
+  wait_for: host={{kubernetes_overlord.ip}} port=8080
 
 - name: Install kubelet config
   template: src=kubelet.j2 dest=/etc/kubernetes/kubelet

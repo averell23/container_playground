@@ -9,8 +9,19 @@
   become: yes
   roles:
     - kubernetes-overlord
+    - flocker-certs
 
 - hosts: minion
   become: yes
   roles:
     - kubernetes-minion
+
+- hosts: all
+  become: yes
+  roles:
+    - flocker-copy-certs
+
+- hosts: overlord
+  become: yes
+  roles:
+    - flocker-control-service
