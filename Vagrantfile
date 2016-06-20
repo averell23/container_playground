@@ -36,9 +36,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     box.vm.provider :virtualbox do |vb|
       vb.customize ["modifyvm", :id, "--memory", "512"]
       vb.customize ["modifyvm", :id, "--cpus", "1"]
-      file_to_disk = './tmp/large_disk.vdi'
-      vb.customize ['createhd', '--filename', file_to_disk, '--size', 5 * 1024 * 10]
-      vb.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', file_to_disk]
+      file_to_disk = './tmp/data_storage.vdi'
+      unless File.exists? file_to_disk
+        vb.customize ['createhd', '--filename', file_to_disk, '--size', 20 * 1024]
+        vb.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', file_to_disk]
+      end
     end
     box.vm.provision :shell, path: 'mount_disk.sh', run: 'once'
   end

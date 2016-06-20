@@ -1,17 +1,19 @@
 ---
-- hosts: kubernetes
+- hosts: all
   become: yes
   roles:
-    - kubernetes-install
+    - base_setup
 
 - hosts: overlord
   become: yes
   roles:
+    - kubernetes-install
     - kubernetes-overlord
 
 - hosts: minion
   become: yes
   roles:
+    - kubernetes-install
     - kubernetes-minion
 
 - hosts: gluster

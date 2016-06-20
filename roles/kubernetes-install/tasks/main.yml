@@ -6,21 +6,16 @@
     baseurl: http://cbs.centos.org/repos/virt7-docker-common-release/x86_64/os/
     gpgcheck: no
 
-- name: Install kubernetes
-  yum: name="kubernetes" state="latest"
+- name: Install kubernetes and other packages
+  yum: name="{{item}}" state="latest"
+  with_items:
+    - kubernetes
+    - glusterfs
+    - glusterfs-fuse
 
 - name: Disable host firewall
   service: name=firewalld enabled=no state=stopped
 
-- name: Setup hosts line for overlord
-  lineinfile: dest=/etc/hosts line="{{kubernetes_overlord.ip}} {{kubernetes_overlord.name}}"
-
-- name: Setup hosts line for gluster
-  lineinfile: dest=/etc/hosts line="192.168.23.12 gluster"
-
-- name: Setup hosts lines for minions
-  lineinfile: dest=/etc/hosts line="{{item.ip}} {{item.name}}"
-  with_items: "{{kubernetes_minions}}"
 
 - name: Install kubernetes config
   template: src=config.j2 dest=/etc/kubernetes/config

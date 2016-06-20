@@ -1,0 +1,9 @@
+kind: Endpoints
+apiVersion: v1
+metadata:
+  name: demo-glusterfs.local
+subsets:
+- addresses:
+  - ip: 192.168.23.12
+  ports:
+  - port: 1
