@@ -1,3 +1,6 @@
 [submodule "lib"]
 	path = lib
 	url = git@github.com:betterplace/ansible-lib.git
+[submodule "docker/betterplace_app/bp_source"]
+	path = docker/betterplace_app/bp_source
+	url = git@github.com:betterplace/betterplace.git
