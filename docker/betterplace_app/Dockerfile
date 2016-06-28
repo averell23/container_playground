@@ -1,24 +1,53 @@
-FROM centos:7
+FROM ruby:2.3.1-alpine
 MAINTAINER "Daniel Hahn" <averell@newgods.org>
 ENV RUBY_MAJOR 2.3
 ENV RUBY_VERSION 2.3.1
-ENV RAILS_ENV development
-RUN yum install -y git-core zlib zlib-devel gcc-c++ patch readline readline-devel libyaml-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison curl mysql-devel file-devel \
-&& curl -fSL -o ruby.tar.gz "http://cache.ruby-lang.org/pub/ruby/$RUBY_MAJOR/ruby-$RUBY_VERSION.tar.gz" \
-&& mkdir -p /usr/src/ruby \
-&& tar -xvzf ruby.tar.gz -C /usr/src/ruby --strip-components=1 \
-&& rm ruby.tar.gz \
-&& cd /usr/src/ruby \
-&& autoconf \
-&& ./configure --disable-install-doc \
-&& make && make install
-RUN gem install bundler --version 1.12.5
+ENV RAILS_ENV production
 ADD bp_source/ /var/apps/betterplace/current
-RUN useradd betterplace
+RUN adduser betterplace -D -H
 RUN chown -R betterplace: /var/apps/betterplace
-RUN echo ZONE='"Europe/Berlin"' > /etc/sysconfig/clock
+# We need edge for libmagic at the moment
+RUN echo "http://dl-3.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
+RUN apk upgrade --update-cache --available
+# This does not actully do anything except make our current
+# Centos-Based Rails app happy
+RUN mkdir /etc/sysconfig && echo ZONE='"Europe/Berlin"' > /etc/sysconfig/clock
+RUN apk add --no-cache --virtual .bundle-builddeps\
+    autoconf \
+    bash \
+		bison \
+		bzip2 \
+		bzip2-dev \
+		ca-certificates \
+		coreutils \
+		curl \
+		gcc \
+    g++ \
+		gdbm-dev \
+		glib-dev \
+		libc-dev \
+		libffi-dev \
+		libxml2-dev \
+		libxslt-dev \
+    libstdc++ \
+    libmagic \
+    file-dev \
+    nodejs-dev \
+    mysql-dev \
+		linux-headers \
+		make \
+		ncurses-dev \
+		openssl-dev \
+		procps \
+# https://bugs.ruby-lang.org/issues/11869 and https://github.com/docker-library/ruby/issues/75
+		readline-dev \
+		ruby \
+		yaml-dev \
+		zlib-dev \
+    git
+RUN mkdir /home/betterplace && chown -R betterplace: /home/betterplace
 USER betterplace
+RUN bundle config build.therubyracer --use-system-libraries
 WORKDIR /var/apps/betterplace/current
 RUN bundle install --path /var/apps/betterplace/shared/bundle/2.3.1 --without [:development, :test, :deployment] --deployment
 RUN bundle exec rake setup:copy
-RUN bundle exec rake assets:precompile
