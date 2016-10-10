@@ -3,15 +3,14 @@ MAINTAINER "Daniel Hahn" <averell@newgods.org>
 ENV RUBY_MAJOR 2.3
 ENV RUBY_VERSION 2.3.1
 ENV RAILS_ENV production
-ADD bp_source/ /var/apps/betterplace/current
-RUN adduser betterplace -D -H
-RUN chown -R betterplace: /var/apps/betterplace
+ENV DB_ADAPTER=nulldb
 # We need edge for libmagic at the moment
 RUN echo "http://dl-3.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
 RUN apk upgrade --update-cache --available
 # This does not actully do anything except make our current
 # Centos-Based Rails app happy
 RUN mkdir /etc/sysconfig && echo ZONE='"Europe/Berlin"' > /etc/sysconfig/clock
+ENV SMTP_SERVER='127.0.0.1'
 RUN apk add --no-cache --virtual .bundle-builddeps\
     autoconf \
     bash \
@@ -45,9 +44,13 @@ RUN apk add --no-cache --virtual .bundle-builddeps\
 		yaml-dev \
 		zlib-dev \
     git
+ADD bp_source/ /var/apps/betterplace/current
+RUN adduser betterplace -D -H
+RUN chown -R betterplace: /var/apps/betterplace
 RUN mkdir /home/betterplace && chown -R betterplace: /home/betterplace
 USER betterplace
 RUN bundle config build.therubyracer --use-system-libraries
 WORKDIR /var/apps/betterplace/current
-RUN bundle install --path /var/apps/betterplace/shared/bundle/2.3.1 --without [:development, :test, :deployment] --deployment
+RUN bundle install --path /var/apps/betterplace/shared/bundle/2.3.1 --without [:development, :test, :deployment] --deployment --retry 3
 RUN bundle exec rake setup:copy
+RUN bundle exec rake assets:precompile
