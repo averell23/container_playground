@@ -55,5 +55,3 @@ RUN bundle install --path /var/apps/betterplace/shared/bundle/2.3.1 --without [:
   && bundle exec rake setup:copy
 USER root
 RUN apk del .bundle-builddeps
-USER betterplace
-RUN bundle exec rake assets:precompile
