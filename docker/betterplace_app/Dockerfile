@@ -53,5 +53,5 @@ RUN adduser betterplace -D -H \
 WORKDIR /var/apps/betterplace/current
 RUN bundle install --path /var/apps/betterplace/shared/bundle/2.3.1 --without [:development, :test, :deployment] --deployment --retry 3 \
   && bundle exec rake setup:copy
-USER root
 RUN apk del .bundle-builddeps
+USER betterplace

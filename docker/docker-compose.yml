@@ -1,0 +1,22 @@
+version: '2'
+services:
+  redis:
+    image: redis
+  mysql:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+  elasticsearch:
+    image: "elasticsearch:1.7"
+  betterplace:
+    build: betterplace_app
+    depends_on:
+     - mysql
+     - redis
+     - elasticsearch
+    environment:
+      - RAILS_ENV=test
+      - DB_PASSWORD=secret
+      - DB_HOST=mysql
+      - REDIS_HOST=redis:6379
+      - ELASTICSEARCH_HOST=elasticsearch:9200
