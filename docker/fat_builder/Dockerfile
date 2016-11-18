@@ -12,10 +12,15 @@ ENV ELASTICSEARCH_VERSION 1.7.5
 ENV DEBIAN_FRONTEND noninteractive
 ENV PATH /usr/local/ruby/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
+COPY elasticsearch_run /etc/service/elasticsearch/run
+COPY mysql_run         /etc/service/mysql/run
+COPY redis_run         /etc/service/redis/run
+COPY ssh_key           /root/.ssh/id_rsa
+
 RUN apt-get update \
     && apt-get install -y -q wget openjdk-8-jre mysql-server-$MYSQL_VERSION redis-server imagemagick git \
                autoconf bison build-essential libssl-dev libyaml-dev libreadline6-dev zlib1g-dev \
-               libncurses5-dev libffi-dev libgdbm3 libgdbm-dev libmysqlclient-dev libmagic-dev
+               libncurses5-dev libffi-dev libgdbm3 libgdbm-dev libmysqlclient-dev libmagic-dev \
                libcurl4-openssl-dev \
     && wget --quiet https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-$ELASTICSEARCH_VERSION.deb \
     && dpkg -i elasticsearch-$ELASTICSEARCH_VERSION.deb \
@@ -23,11 +28,10 @@ RUN apt-get update \
     && echo 'script.disable_dynamic: false' >> /etc/elasticsearch/elasticsearch.yml \
     && git clone https://github.com/rbenv/ruby-build.git && ./ruby-build/install.sh \
     && ruby-build $RUBY_VERSION /usr/local/ruby \
-    && gem install bundler
-
-COPY elasticsearch_run /etc/service/elasticsearch/run
-COPY mysql_run         /etc/service/mysql/run
-COPY redis_run         /etc/service/redis/run
+    && gem install bundler \
+    && mkdir /var/apps/ \
+    && chmod 0600 /root/.ssh/id_rsa \
+    && ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
 # Clean up APT when done.
 # RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
